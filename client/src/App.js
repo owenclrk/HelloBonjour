@@ -3,20 +3,20 @@ import api from './api'
 import './App.css';
 
 const App = () => {
-  const [items, setItems] = useState([]);
+  const [results, setResults] = useState([]);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
     price: ''
   });
 
-  const fetchItems = async () => {
-    const response = await api.get('/items/');
-    setItems(response.data)
+  const fetchResults = async () => {
+    const response = await api.get('/dict/');
+    setResults(response.data)
   };
 
   useEffect(() => {
-    fetchItems();
+    fetchResults();
   }, []);
 
   const handleInputChange = (event) => {
@@ -29,21 +29,20 @@ const App = () => {
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-    await api.post('/items/', formData);
+    await api.post('/dict/', formData);
     console.log('formData',formData);
-    fetchItems();
+    fetchResults();
     setFormData({
-      name: '',
-      description: '',
-      price: ''
+      text: '',
+      result: '',
+      lang: ''
     });
   };
-x
 
-  const handleDelete = async (itemId) => {
+  const handleDelete = async (id) => {
       try {
-        await api.delete(`/items/${itemId}`); // Ensure your FastAPI route is @app.delete("/items/{item_id}")
-        fetchItems(); // Refresh the list after deleting
+        await api.delete(`/dict/${id}`); // Ensure your FastAPI route is @app.delete("/dict/{item_id}")
+        fetchResults(); // Refresh the list after deleting
       } catch (error) {
         console.error("Error deleting item:", error);
         alert (error)
@@ -54,7 +53,7 @@ x
 return (
 <div className="app-container">
   <div className="card">
-    <h1 className="title">Shopping Wishlist</h1>
+    <h1 className="title">Translation Dictionary</h1>
 
   <form className="item-form" onSubmit={handleFormSubmit}>
       <div className="input-group">
@@ -67,11 +66,12 @@ return (
           onChange={handleInputChange}
           value={formData.name}
           required
+          placeholder='Word to be translated'
         />
       </div>
 
       <div className="input-group">
-        <label>Item Description</label>
+        <label>Language</label>
         <input
           type='text'
           className='form-control'
@@ -83,52 +83,39 @@ return (
         />
       </div>
 
-      <div className="input-group">
-        <label>Item Price</label>
-        <input
-          type='text'
-          className='form-control'
-          id='price'
-          name='price'
-          onChange={handleInputChange}
-          value={formData.price}
-          placeholder='0.0'
-          required
-        />
-      </div>
 
       <button type="submit" className="submit-btn">Submit</button>
     </form>
 
         {/* 3. Centered Table Section */}
-          <h2 className="subtitle">Items List</h2>
+          <h2 className="subtitle">Translation List</h2>
               <div className="table-container">
                 <table className="items-table">
                 <thead className='table-primary'>
                   <tr>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Price</th>
+                    <th>Word</th>
+                    <th>Language</th>
+                    <th>Translation</th>
                     <th>Remove</th>
                   </tr>
                 </thead>
                 <tbody className="align-middle">
-                  {items.map((item) => (
-                    <tr key={item.id}>
-                      <td className="fw-medium">{item.name}</td>
-                      <td className="text-muted">{item.description}</td>
-                      <td className="text-primary fw-bold">€{item.price}</td>
+                  {results.map((result) => (
+                    <tr key={result.id}>
+                      <td className="fw-medium">{result.word}</td>
+                      <td className="text-muted">{result.language}</td>
+                      <td className="text-primary fw-bold">€{result.translation}</td>
                       <td>
-                        <button onClick={() => handleDelete(item.id)} className="btn btn-outline-danger btn-sm px-3">
+                        <button onClick={() => handleDelete(result.id)} className="btn btn-outline-danger btn-sm px-3">
                           Delete
                         </button>
                       </td>
                     </tr>
                   ))}
-                  {items.length === 0 && (
+                  {results.length === 0 && (
                     <tr>
                       <td colSpan="3" className="text-center py-4 text-muted">
-                        No items found. Add one above!
+                        No translation found. Add one above!
                       </td>
                     </tr>
                   )}

@@ -1,9 +1,9 @@
 from sqlalchemy import Column, Integer, String
 from database import Base
 
-class Item(Base):
-    __tablename__ = "items"
+class translation(Base):
+    __tablename__ = "translation"
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(255), index=True)
-    description = Column(String(255), index=True)
-    price = Column(Integer)
+    text = Column(String(255), index=True)
+    result = Column(String(255), index=True)
+    lang = Column(String(255), index=True)

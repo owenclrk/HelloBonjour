@@ -6,7 +6,7 @@ from database import SessionLocal, engine
 from pydantic import BaseModel
 import models
 from typing import Annotated, List
-from crud import get_item, create_item
+#from crud import get_item, create_item
 
 app = FastAPI()
 
@@ -27,17 +27,14 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
-#Default check to make sure API is working
-@app.get('/')
-async def check():
-    return 'hello'
 
-#Allow for inheritence of the ID when ItemModel is called
+
+#Allow for inheritence of the ID when WordModel is called
 #Create a Pydantic Model 
 class WordBase(BaseModel):
-    word: str
-    translation: str
-    setence: str
+    text: str
+    result: str
+    lang: str
 
 class WordModel(WordBase):
     id: int
@@ -55,43 +52,50 @@ db_dependency = Annotated[Session, Depends(get_db)]
 
 models.Base.metadata.create_all(bind=engine)
 
-#Update Database
-@app.post("/items/", response_model=WordModel)
-async def create_items(item: WordBase, db: db_dependency):
-    # print('he')
-    db_dict = models.Item(**word.model_dump())
-    db.add(db_dict)
-    db.commit()
-    db.refresh(db_dict)
-    return db_dict
+#Default check to make sure API is working
+@app.get('/')
+async def check():
+    return 'Hello'
 
-
-@app.get("/items/", response_model=List[WordModel])
+#Read the dictionary 
+@app.get("/dict/", response_model=List[WordModel])
 async def read_items(db: db_dependency, skip: int=0, limit: int=100):
-    items = db.query(models.Item).offset(skip).limit(limit).all()
-    return items
-
-@app.put("/items/{item_id}")
-async def update_item(item_id: int, name: str, description: str, price:int, db: db_dependency):
-    item = db.query(models.Item).filter(models.Item.id == item_id).first()
-    if item is None:
-        raise HTTPException(status_code=404, detail="Item not found")
-    
-    item.name = name
-    item.description = description
-    item.price = price
-    db.commit()
-    db.refresh(item)
-    return item
+    dict = db.query(models.translation).offset(skip).limit(limit).all()
+    return dict
 
 
-@app.delete("/items/{item_id}")
-async def delete_items(item_id: int, db:Session = Depends(get_db)):
-    item = db.query(models.Item).filter(models.Item.id == item_id).first()
-    if item is None:
-        raise HTTPException(status_code=404, detail="Item not found")
-    db.delete(item)
-    db.commit()
+# #Update Database
+# @app.post("/dict/", response_model=WordModel)
+# async def create_items(item: WordBase, db: db_dependency):
+#     # print('he')
+#     db_dict = models.translation(**translation.model_dump())
+#     db.add(db_dict)
+#     db.commit()
+#     db.refresh(db_dict)
+#     return db_dict
 
-    return {"detail":"Item Deleted"}
+
+# #Check the dictonary for a word based on its ID
+# @app.put("/dict/{id}")
+# async def update_item(id: int, text: str, result: str, lang: str, db: db_dependency):
+#     dict = db.query(models.translation).filter(models.translation.id == id).first()
+#     if dict is None:
+#         raise HTTPException(status_code=404, detail="Item not found")
+#     dict.text = text
+#     dict.result = result
+#     dict.lang = lang
+#     db.commit()
+#     db.refresh(dict)
+#     return dict
+
+
+# @app.delete("/dict/{id}")
+# async def delete_items(id: int, db:Session = Depends(get_db)):
+#     item = db.query(models.translation).filter(models.translation.id == id).first()
+#     if item is None:
+#         raise HTTPException(status_code=404, detail="Item not found")
+#     db.delete(item)
+#     db.commit()
+
+#     return {"detail":"Item Deleted"}
 

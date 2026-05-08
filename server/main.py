@@ -65,38 +65,38 @@ async def read_items(db: db_dependency, skip: int=0, limit: int=100):
 
 
 
-#Update Database
+# --- CREATE ---
 @app.post("/dict/", response_model=WordModel)
 async def create_translation(item: WordBase, db: db_dependency):
-    # print('he')
-    db_dict = models.translation(**translation.model_dump())
+    # FIX: Use the 'item' passed into the function, not 'translation'
+    db_dict = models.translation(**item.model_dump())
     db.add(db_dict)
     db.commit()
     db.refresh(db_dict)
     return db_dict
 
 
-# #Check the dictonary for a word based on its ID
-# @app.put("/dict/{id}")
-# async def update_item(id: int, text: str, result: str, lang: str, db: db_dependency):
-#     dict = db.query(models.translation).filter(models.translation.id == id).first()
-#     if dict is None:
-#         raise HTTPException(status_code=404, detail="Item not found")
-#     dict.text = text
-#     dict.result = result
-#     dict.lang = lang
-#     db.commit()
-#     db.refresh(dict)
-#     return dict
+#Check the dictonary for a word based on its ID
+@app.put("/dict/{id}")
+async def update_item(id: int, text: str, result: str, lang: str, db: db_dependency):
+    dict = db.query(models.translation).filter(models.translation.id == id).first()
+    if dict is None:
+        raise HTTPException(status_code=404, detail="Item not found")
+    dict.text = text
+    dict.result = result
+    dict.lang = lang
+    db.commit()
+    db.refresh(dict)
+    return dict
 
 
-# @app.delete("/dict/{id}")
-# async def delete_items(id: int, db:Session = Depends(get_db)):
-#     item = db.query(models.translation).filter(models.translation.id == id).first()
-#     if item is None:
-#         raise HTTPException(status_code=404, detail="Item not found")
-#     db.delete(item)
-#     db.commit()
+@app.delete("/dict/{id}")
+async def delete_items(id: int, db:Session = Depends(get_db)):
+    item = db.query(models.translation).filter(models.translation.id == id).first()
+    if item is None:
+        raise HTTPException(status_code=404, detail="Item not found")
+    db.delete(item)
+    db.commit()
 
-#     return {"detail":"Item Deleted"}
+    return {"detail":"Item Deleted"}
 

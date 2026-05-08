@@ -5,9 +5,9 @@ import './App.css';
 const App = () => {
   const [results, setResults] = useState([]);
   const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    price: ''
+    text: '',
+    result: '',
+    lang: ''
   });
 
   const fetchResults = async () => {
@@ -61,10 +61,10 @@ return (
         <input
           type='text'
           className='form-control'
-          id='name'
-          name='name'
+          id='text'
+          name='text'
           onChange={handleInputChange}
-          value={formData.name}
+          value={formData.text}
           required
           placeholder='Word to be translated'
         />
@@ -75,10 +75,10 @@ return (
         <input
           type='text'
           className='form-control'
-          id='description'
-          name='description'
+          id='lang'
+          name='lang'
           onChange={handleInputChange}
-          value={formData.description}
+          value={formData.lang}
           required
         />
       </div>
@@ -102,9 +102,9 @@ return (
                 <tbody className="align-middle">
                   {results.map((result) => (
                     <tr key={result.id}>
-                      <td className="fw-medium">{result.word}</td>
-                      <td className="text-muted">{result.language}</td>
-                      <td className="text-primary fw-bold">€{result.translation}</td>
+                      <td className="fw-medium">{result.text}</td>
+                      <td className="text-muted">{result.result}</td>
+                      <td className="text-primary fw-bold">{result.lang}</td>
                       <td>
                         <button onClick={() => handleDelete(result.id)} className="btn btn-outline-danger btn-sm px-3">
                           Delete

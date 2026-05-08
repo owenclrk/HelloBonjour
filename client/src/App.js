@@ -7,7 +7,7 @@ const App = () => {
   const [formData, setFormData] = useState({
     text: '',
     result: '',
-    lang: ''
+    lang: 'FR'
   });
 
   const fetchResults = async () => {
@@ -72,15 +72,18 @@ return (
 
       <div className="input-group">
         <label>Language</label>
-        <input
-          type='text'
-          className='form-control'
+        <select
+          className='form-select'
           id='lang'
           name='lang'
+          value={formData.lang} 
           onChange={handleInputChange}
-          value={formData.lang}
           required
-        />
+        >
+        # Need to add default or else react won't update the table
+        <option value="" disabled>Select a language</option> {/* Placeholder */}
+        <option value="FR"> French</option>
+        </select>
       </div>
 
 
@@ -103,8 +106,8 @@ return (
                   {results.map((result) => (
                     <tr key={result.id}>
                       <td className="fw-medium">{result.text}</td>
-                      <td className="text-muted">{result.result}</td>
-                      <td className="text-primary fw-bold">{result.lang}</td>
+                      <td className="text-muted">{result.lang}</td>
+                      <td className="text-primary fw-bold">{result.result}</td>
                       <td>
                         <button onClick={() => handleDelete(result.id)} className="btn btn-outline-danger btn-sm px-3">
                           Delete

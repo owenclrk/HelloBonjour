@@ -6,6 +6,7 @@ from database import SessionLocal, engine
 from pydantic import BaseModel
 import models
 from typing import Annotated, List
+import translate
 #from crud import get_item, create_item
 
 app = FastAPI()
@@ -68,8 +69,9 @@ async def read_items(db: db_dependency, skip: int=0, limit: int=100):
 # --- CREATE ---
 @app.post("/dict/", response_model=WordModel)
 async def create_translation(item: WordBase, db: db_dependency):
-    # FIX: Use the 'item' passed into the function, not 'translation'
     db_dict = models.translation(**item.model_dump())
+    db_dict.result = translate.translate_word(db_dict.text,db_dict.lang)
+    print (db_dict.result)
     db.add(db_dict)
     db.commit()
     db.refresh(db_dict)

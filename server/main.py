@@ -64,15 +64,16 @@ async def read_items(db: db_dependency, skip: int=0, limit: int=100):
     return dict
 
 
-# #Update Database
-# @app.post("/dict/", response_model=WordModel)
-# async def create_items(item: WordBase, db: db_dependency):
-#     # print('he')
-#     db_dict = models.translation(**translation.model_dump())
-#     db.add(db_dict)
-#     db.commit()
-#     db.refresh(db_dict)
-#     return db_dict
+
+#Update Database
+@app.post("/dict/", response_model=WordModel)
+async def create_translation(item: WordBase, db: db_dependency):
+    # print('he')
+    db_dict = models.translation(**translation.model_dump())
+    db.add(db_dict)
+    db.commit()
+    db.refresh(db_dict)
+    return db_dict
 
 
 # #Check the dictonary for a word based on its ID

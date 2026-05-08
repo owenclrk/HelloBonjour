@@ -57,7 +57,7 @@ return (
 
   <form className="item-form" onSubmit={handleFormSubmit}>
       <div className="input-group">
-        <label>Item Name</label>
+        <label>Word to Be Translated</label>
         <input
           type='text'
           className='form-control'

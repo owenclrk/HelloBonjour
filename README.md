@@ -22,7 +22,7 @@ translation_id - Id number of the translated number
 2. database.py
    1. Connect to local database using SQLalchemy
 3. models.py
-   1.
+   1. Contains Class for connecting to
 4. translate.py
    1. Connect to DeepL and return language translation
 5. ai.py

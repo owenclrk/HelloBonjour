@@ -13,6 +13,7 @@ deepl_client = deepl.DeepLClient(auth_key)
 # result = deepl_client.translate_text("Hello, world!", target_lang="DE")
 def translate_word(text,lang):
     result = deepl_client.translate_text(text, target_lang=lang)
+    #Only return the response. Need to return a packet
     return result.text
 
 

@@ -72,6 +72,7 @@ async def read_items(db: db_dependency, skip: int=0, limit: int=100):
 
 
 # --- CREATE ---
+#Create an entry for a translated word
 @app.post("/dict/", response_model=WordModel)
 async def create_translation(item: WordBase, db: db_dependency):
     db_dict = models.translation(**item.model_dump())
@@ -96,7 +97,7 @@ async def update_item(id: int, text: str, result: str, lang: str, db: db_depende
     db.refresh(dict)
     return dict
 
-
+#Remove translation from the history
 @app.delete("/dict/{id}")
 async def delete_items(id: int, db:Session = Depends(get_db)):
     item = db.query(models.translation).filter(models.translation.id == id).first()
@@ -107,24 +108,10 @@ async def delete_items(id: int, db:Session = Depends(get_db)):
 
     return {"detail":"Item Deleted"}
 
-@app.get("/dict/", response_model=List[WordModel])
-async def create_test(db: db_dependency, skip: int=0, limit: int=100):
-    dict = db.query(models.translation).offset(skip).limit(limit).all()
-    return dict
 
-
-#Using the list of words, ask Gemini to provide a list of words similar for learning french
-# --- CREATE ---
-# @app.get("/questions/", response_model=List[WordModel])
-# async def query_dictionary(db: db_dependency):
-#     list = []
-#     dict = db.query(models.translation).all()
-#     for query in dict:
-#         list.append(query.result)
-
-#     print(query_gemini("Generate a list of similar words that people mistake when learning french: " + str(list)))
-#     return dict
-
+#In Progress
+#Access database and get a list of the translated words
+#Create interface to allow client to interact and check spelling.
 @app.get("/questions/", response_model=List[WordModel])
 async def generate_questions(db: db_dependency):
     list = []

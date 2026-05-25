@@ -12,12 +12,7 @@ deepl_client = deepl.DeepLClient(auth_key)
 
 # result = deepl_client.translate_text("Hello, world!", target_lang="DE")
 def translate_word(text,lang):
-    print (text)
-    print(lang)
-    return deepl_client.translate_text(text, target_lang=lang)
+    result = deepl_client.translate_text(text, target_lang=lang)
+    return result.text
 
-text = "Hello"
-lang = "FR"
-
-print (translate_word(text,lang))
 

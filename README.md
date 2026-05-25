@@ -18,15 +18,15 @@ translation_id - Id number of the translated number
 # Server
 
 1. main.py
-   a) Contains API calls for functions to add, remove and update translations
+   1. Contains API calls for functions to add, remove and update translations
 2. database.py
-   a) Connect to local database using SQLalchemy
+   1. Connect to local database using SQLalchemy
 3. models.py
-   a)
+   1.
 4. translate.py
-   a) Connect to DeepL and return language translation
+   1. Connect to DeepL and return language translation
 5. ai.py
-   a) Connect to Google Gemini and return prompt. Input to function is a prompt created in main.py
+   1. Connect to Google Gemini and return prompt. Input to function is a prompt created in main.py
 
 # Work in Progress
 

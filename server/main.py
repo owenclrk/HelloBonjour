@@ -66,7 +66,7 @@ async def check():
 #Read the dictionary 
 @app.get("/dict/", response_model=List[WordModel])
 async def read_items(db: db_dependency, skip: int=0, limit: int=100):
-    dict = db.query(models.translation).offset(skip).limit(limit).all()
+    dict = db.query(models.translation).order_by(models.translation.id.desc()).offset(skip).limit(limit).all()
     return dict
 
 

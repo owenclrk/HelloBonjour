@@ -184,13 +184,6 @@ return (
       {/* <button onClick={() => handleQuestions()} className="submit-btn">
         Generate Questions
       </button> */}
-            <tbody className="align-middle">
-              {/* {questions.map((question) => (
-                <tr key={question.id}>
-                  <td className="fw-medium">{question.prompt}</td>
-                </tr>
-              ))} */}
-            </tbody>
       </div>
     </div>
   );

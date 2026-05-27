@@ -19,7 +19,8 @@ redis_client = redis.Redis(host='redis',port=6379,db=0)
 #FASTAPI uses LocalHost 8000 while React uses LocalHost 3000
 origins = [
     "http://localhost:3000",
-    "http://frontend:3000"
+    "http://frontend:3000",
+    "https://hellobonjour-production-65d0.up.railway.app"
 ]
 
 

@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+redis
+sqlalchemy
+pydantic
+deepl
+google-genai
+python-dotenv
+pymysql

@@ -13,13 +13,15 @@ from ai import query_gemini
 app = FastAPI()
 
 models.Base.metadata.create_all(bind=engine)
-redis_client = redis.Redis(host='localhost',port=6379,db=0)
+redis_client = redis.Redis(host='redis',port=6379,db=0)
 
 #Used for CORs when interacting with React
 #FASTAPI uses LocalHost 8000 while React uses LocalHost 3000
 origins = [
-    "http://localhost:3000"
+    "http://localhost:3000",
+    "http://frontend:3000"
 ]
+
 
 app.add_middleware(
     CORSMiddleware,

@@ -1,5 +1,16 @@
 # HelloBonjour
 
+## Introduction
+
+HelloBonjour is a web app created to help languge learners by utilising previous word translations. With apps like Google Translate or Deepl, once a learner looks up a new word, they rarely use it again. The purpose of this app is to create a database of previous words and utilise AI to generate information, questions and language learning advice based on the their previous search history. With the database, insights into common spelling mistakes can be indetified and shown to the user.
+
+# Tech Stack
+
+Backend - Python, Alchemqy SQL
+Frontend - React, CSS
+Language Translation using DEEPL API
+LLM Model using Google Gemini
+
 # Starting Server
 
 uvicorn main:app --reload

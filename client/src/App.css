@@ -20,6 +20,32 @@
   text-align: center;
 }
 
+.latest-translation {
+  padding: 12px;
+  border: 2px solid blue;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.hideButton {
+  display: inline-flex;
+  color: blue;
+  border: 2px solid blue;
+  padding: 10px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.translation_table{
+  display: flex; /* allows boxes to be laided horizontally */
+  gap: 12px; /* Add 12px gap between boxes */
+  justify-content: center; /* Center boxes along the main axis */
+  align-items: center; /* Boxes will be aligned middle incase boxes width changes */
+  margin-bottom: 16px; /* Add gap to the bottom of the box */
+}
+
+
+
 .title { color: #1e3a8a; margin-bottom: 25px; }
 .subtitle { color: #1e40af; margin-top: 30px; }
 
@@ -49,6 +75,13 @@ input {
   border-radius: 8px;
   outline: none;
   transition: border-color 0.3s;
+}
+
+.latest-translation {
+  padding: 12px;
+  border: 2px solid blue;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
 input:focus {

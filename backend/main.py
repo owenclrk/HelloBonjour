@@ -1,6 +1,5 @@
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-import redis
 from sqlalchemy.orm import Session
 from database import SessionLocal, engine
 from pydantic import BaseModel
@@ -13,7 +12,6 @@ from ai import query_gemini
 app = FastAPI()
 
 models.Base.metadata.create_all(bind=engine)
-redis_client = redis.Redis(host='redis',port=6379,db=0)
 
 #Used for CORs when interacting with React
 #FASTAPI uses LocalHost 8000 while React uses LocalHost 3000

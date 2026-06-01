@@ -4,10 +4,10 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./frontend:/app          # 1. The Active Code Link
-      - /app/node_modules        # 2. The Dependency Shield
+      - ./frontend:/app         
+      - /app/node_modules        
     environment:
-      - CHOKIDAR_USEPOLLING=true # 3. The File Watcher Booster
+      - CHOKIDAR_USEPOLLING=true 
     depends_on:
       - backend
 

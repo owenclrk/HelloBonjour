@@ -64,42 +64,46 @@ models.Base.metadata.create_all(bind=engine)
 async def check():
     return 'Hello'
 
-#Read the dictionary 
-@app.get("/dict/", response_model=List[WordModel])
+#Read the translationsionary 
+@app.get("/translations/", response_model=List[WordModel])
 async def read_items(db: db_dependency, skip: int=0, limit: int=100):
-    dict = db.query(models.translation).order_by(models.translation.id.desc()).offset(skip).limit(limit).all()
-    return dict
+    translations = db.query(models.translation).order_by(models.translation.id.desc()).offset(skip).limit(limit).all()
+    return translations
 
 
 
 # --- CREATE ---
 #Create an entry for a translated word
-@app.post("/dict/", response_model=WordModel)
+@app.post("/translations/", response_model=WordModel)
 async def create_translation(item: WordBase, db: db_dependency):
-    db_dict = models.translation(**item.model_dump())
-    db_dict.result = translate_word(db_dict.text,db_dict.lang)
-    print (db_dict.result)
-    db.add(db_dict)
-    db.commit()
-    db.refresh(db_dict)
-    return db_dict
+    db_translations = models.translation(**item.model_dump())
+    db_translations.result = translate_word(db_translations.text,db_translations.lang)
+    print (db_translations.result)
+    try:
+        db.add(db_translations)
+        db.commit()
+        db.refresh(db_translations)
+    except SQLAlchemyError:
+        db.rollback()
+        raise HTTPException(status_code=500, detail="Database error")
+    return db_translations
 
 
-#Check the dictonary for a word based on its ID
-@app.put("/dict/{id}")
+#Check the translationsonary for a word based on its ID
+@app.put("/translations/{id}")
 async def update_item(id: int, text: str, result: str, lang: str, db: db_dependency):
-    dict = db.query(models.translation).filter(models.translation.id == id).first()
-    if dict is None:
+    translations = db.query(models.translation).filter(models.translation.id == id).first()
+    if translations is None:
         raise HTTPException(status_code=404, detail="Item not found")
-    dict.text = text
-    dict.result = result
-    dict.lang = lang
+    translations.text = text
+    translations.result = result
+    translations.lang = lang
     db.commit()
-    db.refresh(dict)
-    return dict
+    db.refresh(translations)
+    return translations
 
 #Remove translation from the history
-@app.delete("/dict/{id}")
+@app.delete("/translations/{id}")
 async def delete_items(id: int, db:Session = Depends(get_db)):
     item = db.query(models.translation).filter(models.translation.id == id).first()
     if item is None:
@@ -110,13 +114,26 @@ async def delete_items(id: int, db:Session = Depends(get_db)):
     return {"detail":"Item Deleted"}
 
 
-#In Progress
-#Access database and get a list of the translated words
-#Create interface to allow client to interact and check spelling.
-@app.get("/questions/", response_model=List[WordModel])
+# #In Progress
+# #Access database and get a list of the translated words
+# #Create interface to allow client to interact and check spelling.
+# @app.get("/questions/", response_model=List[WordModel])
+# async def generate_questions(db: db_dependency):
+#     list = []
+#     translations = db.query(models.translation).all()
+#     for query in translations:
+#         list.append(query.result)
+#     return translations
+@app.get("/questions/")
 async def generate_questions(db: db_dependency):
-    list = []
-    dict = db.query(models.translation).all()
-    for query in dict:
-        list.append(query.result)
-    return dict
+    words = db.query(models.translation).all()
+    word_list = [f"{w.text} = {w.result}" for w in words]
+    
+    prompt = f"""
+    Given these word translations: {word_list}
+    Generate 5 quiz questions. Return JSON in this format:
+    [{{"question": "How do you say 'dog' in French?", "answer": "chien"}}]
+    """
+    
+    result = query_gemini(prompt)
+    return result 

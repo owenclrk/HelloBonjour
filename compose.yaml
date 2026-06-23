@@ -4,13 +4,13 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./frontend:/app         
-      - /app/node_modules        
+      - ./frontend:/app
+      - /app/node_modules
     environment:
-      - CHOKIDAR_USEPOLLING=true 
+      - CHOKIDAR_USEPOLLING=true
     depends_on:
       - backend
-
+ 
   backend:
     build: ./backend
     ports:
@@ -22,23 +22,32 @@ services:
         condition: service_healthy
       redis:
         condition: service_started
-
+ 
   db:
     image: mysql:8
     environment:
-      MYSQL_ROOT_PASSWORD: Paperman10!
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
       MYSQL_DATABASE: dbname
       MYSQL_USER: user
-      MYSQL_PASSWORD: Paperman10!
+      MYSQL_PASSWORD_FILE: /run/secrets/db_password
     ports:
       - "3307:3306"
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pPaperman10!"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$(cat /run/secrets/db_root_password)"]
       interval: 5s
       timeout: 5s
       retries: 10
-
+    secrets:
+      - db_password
+      - db_root_password
+ 
   redis:
     image: redis:7
     ports:
       - "6379:6379"
+ 
+secrets:
+  db_password:
+    file: ./secrets/db_password.txt
+  db_root_password:
+    file: ./secrets/db_root_password.txt
